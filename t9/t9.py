@@ -16,7 +16,20 @@ def parse_content(content):
     return freq_dict
 
 def make_tree(words):
-    return {}
+    # function takes a dictionary mapping words to their frequency an returns
+    # a trie represantation dictionary
+
+    trie_dict = {}
+
+    for word in words.keys():
+        curr_node = trie_dict
+        for character in word:
+            if character not in curr_node:
+                curr_node[character] = {}
+            curr_node = curr_node[character]
+        curr_node["$" + word] = words.get(word)
+
+    return trie_dict
 
 def predict(tree, numbers):
     return {}
@@ -31,7 +44,7 @@ if __name__ == '__main__':
     words = parse_content(content)
 
     # PART 2: Building a trie from a collection of words.
-    tree = gold.make_tree(words)
+    tree = make_tree(words)
 
     while True:
         # PART 3: Predict words that could follow
