@@ -2,7 +2,18 @@ import helper
 import gold
 
 def parse_content(content):
-    return {}
+    # function accepts the text contents of a file and returns a
+    # dict mapping a word to its frequency
+
+    freq_dict = {}
+    word_lst = content.split()
+    for word in word_lst:
+        if freq_dict.get(word) is None:
+            freq_dict[word] = 1
+        else:
+            freq_dict[word] = freq_dict.get(word) + 1
+
+    return freq_dict
 
 def make_tree(words):
     return {}
@@ -17,7 +28,7 @@ if __name__ == '__main__':
     # When you've finished implementing a part, remove the `gold.` prefix to check your own code.
 
     # PART 1: Parsing a string into a dictionary.
-    words = gold.parse_content(content)
+    words = parse_content(content)
 
     # PART 2: Building a trie from a collection of words.
     tree = gold.make_tree(words)
