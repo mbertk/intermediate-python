@@ -32,6 +32,11 @@ def make_tree(words):
     return trie_dict
 
 def predict(tree, numbers):
+
+    for number in numbers:
+        letters = helper.keymap.get(number)
+        for letter in letters:
+
     return {}
 
 
