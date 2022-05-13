@@ -1,3 +1,7 @@
+class InvalidPasswordError(ValueError):
+    pass
+
+
 INVALID_PASSWORDS = (
     'password',
     'abc123',
@@ -5,44 +9,23 @@ INVALID_PASSWORDS = (
 )
 
 
-class InvalidPasswordError(KeyError):
-    pass
-
-
-class InvalidUsernameError(KeyError):
-    pass
-
-
 def validate_password(username, password):
-    try:
-        if (password == username):
-            raise InvalidUsernameError
-        if (password in INVALID_PASSWORDS):
-            raise InvalidPasswordError
-
-    except InvalidPasswordError:
-        "Password is invalid"
-    except InvalidUsernameError:
-        "Username is same as password"
-    else:
-        return True
+    if password == username:
+        raise InvalidPasswordError("Password cannot be the same as your username.")
+    if password in INVALID_PASSWORDS:
+        raise InvalidPasswordError("Password cannot one of the most common passwords.")
 
 
 def create_account(username, password):
-    print(f"Account for {username} created")
     return (username, password)
 
 
 def main(username, password):
-    valid = validate_password(username, password)
-
-    if valid:
-        account = create_account(username, password)
+    try:
+        validate_password(username, password)
+    except InvalidPasswordError as err:
+        print(err)
     else:
-        print("Oh no!")
-
-
-if __name__ == '__main__':
-    main('jim', 'jam')
-    main('admin', 'password')  # Oh no!
-    main('guest', 'guest')  # Oh no!
+        account = create_account(username, password)
+    finally:
+        print("Validated password against username and collection")
