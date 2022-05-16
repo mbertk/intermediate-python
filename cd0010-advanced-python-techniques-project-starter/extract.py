@@ -33,7 +33,7 @@ def load_neos(neo_csv_path):
         csv_reader = csv.DictReader(csv_file)
 
         for row in csv_reader:
-            neos.add(NearEarthObject(row['pdes'], row['name'], row['pha'] == 'Y'), row['diameter'])
+            neos.add(NearEarthObject(row['pdes'], row['pha'] == 'Y', row['name'], row['diameter']))
     return neos
 
 
@@ -48,9 +48,16 @@ def load_approaches(cad_json_path):
     # open file
     f = open(cad_json_path)
     # get dict from json object
-    data = json.load(f)
+    dict = json.load(f)
 
-    for row in data:
-        cads.add(CloseApproach(row['des'], row['jd'], row['dist'], row['v_rel']))
+    # find indices of data
+    indices = {}
+    data = ['des', 'cd', 'dist', 'v_rel']
+    for element in data:
+        indices[element] = dict['fields'].index(element)
+
+    for row in dict['data']:
+        cads.add(CloseApproach(row[indices['des']], row[indices['cd']],
+                               row[indices['dist']], row[indices['v_rel']]))
 
     return cads

@@ -43,8 +43,24 @@ class NEODatabase:
         self._approaches = approaches
 
         # TODO: What additional auxiliary data structures will be useful?
+        # create neo dicts
+        self.name_dict = {} # {name : neo_element}
+        self.designation_dict = {} # {designation : neo_element}
+        for neo in neos:
+            self.name_dict[neo.name] = neo
+            self.designation_dict[neo.designation] = neo
+
 
         # TODO: Link together the NEOs and their close approaches.
+
+        # iterate over the approaches and link
+        for approach in self._approaches:
+            # link neo to approach.neo attribute
+            approach.neo = self.designation_dict[approach._designation]
+            # add approach to neos approaches set
+            for neo in self._neos:
+                if neo.designation == approach._designation:
+                    neo.approaches.append(approach)
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -60,7 +76,7 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
         # TODO: Fetch an NEO by its primary designation.
-        return None
+        return self.designation_dict.get(designation)
 
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
@@ -77,7 +93,7 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
         # TODO: Fetch an NEO by its name.
-        return None
+        return self.name_dict.get(name)
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
@@ -94,5 +110,15 @@ class NEODatabase:
         :return: A stream of matching `CloseApproach` objects.
         """
         # TODO: Generate `CloseApproach` objects that match all of the filters.
+
         for approach in self._approaches:
-            yield approach
+            # check if all filter conditions are met
+            if len(filters) == 0:
+                yield approach
+            bool = True
+            for f in filters:
+                if not f(approach):
+                    bool = False
+                    break
+            if bool:
+                yield approach
