@@ -29,6 +29,30 @@ def write_to_csv(results, filename):
         'designation', 'name', 'diameter_km', 'potentially_hazardous'
     )
     # TODO: Write the results to a CSV file, following the specification in the instructions.
+    with open(filename, 'w') as f:
+
+        # create writer
+        writer = csv.writer(f)
+
+        # write header
+        header = ['datetime_utc', 'distance_au', 'velocity_km_s', 'designation',
+                  'name', 'diameter_km', 'potentially_hazardous']
+        writer.writerow(header)
+        for result in results:
+            name = result.neo.name
+            if name is None:
+                name = ""
+            diameter = result.neo.diameter
+            if diameter is None:
+                diameter = "nan"
+            hazard = result.neo.hazardous
+            if hazard == 'Y' or hazard == 1:
+                hazard = "Yes"
+            elif hazard == 'N' or hazard == 0:
+                hazard = "No"
+            row = [result.time, result.distance, result.velocity, result._designation,
+                   name, diameter, hazard]
+            writer.writerow(row)
 
 
 def write_to_json(results, filename):
@@ -43,3 +67,18 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    with open(filename) as f:
+        lst = []
+        for result in results:
+            dict = {}
+            dict['datetime_utc'] = result.time
+            dict['velocity_km_s'] = result.velocity
+            neo_dict = {}
+            neo_dict['designation'] = result.neo._designation
+            neo_dict['name'] = result.neo.name
+            neo_dict['diameter'] = result.neo.diameter
+            neo_dict['potentially_hazardous'] = result.neo.hazardous
+            dict['neo'] = neo_dict
+
+            # dump to json
+            json.dump(dict, f)
