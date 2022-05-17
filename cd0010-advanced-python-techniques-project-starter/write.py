@@ -12,7 +12,7 @@ You'll edit this file in Part 4.
 """
 import csv
 import json
-
+import helpers
 
 def write_to_csv(results, filename):
     """Write an iterable of `CloseApproach` objects to a CSV file.
@@ -70,15 +70,11 @@ def write_to_json(results, filename):
     with open(filename) as f:
         lst = []
         for result in results:
-            dict = {}
-            dict['datetime_utc'] = result.time
-            dict['velocity_km_s'] = result.velocity
-            neo_dict = {}
-            neo_dict['designation'] = result.neo._designation
-            neo_dict['name'] = result.neo.name
-            neo_dict['diameter'] = result.neo.diameter
-            neo_dict['potentially_hazardous'] = result.neo.hazardous
+            dict = {'datetime_utc': helpers.datetime_to_str(result.time), 'velocity_km_s': result.velocity,
+                    'distance_au': result.distance}
+            neo_dict = {'designation': result.neo.designation, 'name': result.neo.name, 'diameter_km': result.neo.diameter,
+                        'potentially_hazardous': result.neo.hazardous}
             dict['neo'] = neo_dict
-
-            # dump to json
-            json.dump(dict, f)
+            lst.append(dict)
+        # dump to json
+        json.dump(lst, f)
