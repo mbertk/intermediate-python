@@ -70,47 +70,53 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return a human-readable string represantion of the  filter."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 # create subclasses of AttributeFilter
 class DateFilter(AttributeFilter):
-    """Subclass of AttributeFilter filtering Name """
+    """Subclass of AttributeFilter filtering Name."""
 
     @classmethod
     def get(cls, approach):
+        """Get the query attribute of the current filter subclass."""
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
-    """Subclass of AttributeFilter filtering Name """
+    """Subclass of AttributeFilter filtering Name."""
 
     @classmethod
     def get(cls, approach):
+        """Get the query attribute of the current filter subclass."""
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
-    """Subclass of AttributeFilter filtering Name """
+    """Subclass of AttributeFilter filtering Name."""
 
     @classmethod
     def get(cls, approach):
+        """Get the query attribute of the current filter subclass."""
         return approach.velocity
 
 
 class DiameterFilter(AttributeFilter):
-    """Subclass of AttributeFilter filtering Name """
+    """Subclass of AttributeFilter filtering Name."""
 
     @classmethod
     def get(cls, approach):
+        """Get the query attribute of the current filter subclass."""
         return approach.neo.diameter
 
 
 class HazardFilter(AttributeFilter):
-    """Subclass of AttributeFilter filtering Name """
+    """Subclass of AttributeFilter filtering Name."""
 
     @classmethod
     def get(cls, approach):
+        """Get the query attribute of the current filter subclass."""
         return approach.neo.hazardous
 
 
@@ -150,7 +156,6 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
     filters = set()
 
     if date is not None:
@@ -186,7 +191,6 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
     if n == 0:
         return iterator
 
